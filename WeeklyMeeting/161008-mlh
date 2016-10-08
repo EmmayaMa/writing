@@ -1,0 +1,43 @@
+2016/10/08【周报】马乐慧
+已完成：
+1.迁移数据库：将sqlite中所有字的松规则迁移到mysql中的sequencerule_strokeloose表中
+2.测试松规则：IDE中可行
+
+待完成：
+修改runapi
+  如果按照原来与松规则对应的runapi测试紧规则存在下列问题
+  1）每个笔画只有第一个笔段的信息，没有后面笔段的信息
+     如：“小”字 判断第二笔时需要用到第一笔的第二个笔段，但是 local bh0_bd1=GetBDByBH(bh0,1)取不到值 为空
+     //##:110009:----
+     local bh0= GetBH(0)
+     local bh0_bd0=GetBDByBH(bh0,0)
+     local bh0_bd1=GetBDByBH(bh0,1)
+     local bh1= GetBH(1)
+     local bh1_bd0=GetBDByBH(bh1,0)
+     
+     if(IsPie(bh1,bl) ==false) then
+	      bflag = 0
+     end
+     if(DirectionLR(bh0_bd0,bh1_bd0) ~= 3) then
+	      pflag = 0
+     end
+     if(DirectionUD(bh0_bd1,bh1_bd0) ~= 1) then
+	      pflag = 0
+     end
+  2）只有当前笔画、笔段信息，无之前所有笔画信息、笔段信息(由于每写一笔便清空)
+  3）当前笔画加密（手写字），之前全部笔画未加密（标准字）
+ 
+我的想法：想参考整字runapi不清空的方式为紧规则重新改出对应的runapi，使之能存住之前笔及其笔段信息（标准字？）
+最佳目标是改完之后松规则也可以使用这套runapi，如果不可以，在runapiconfig表中添加紧规则对应的模式，修改IDE使之可以分模式调用
+
+需要做的事情：1.搞懂松规则的runapi和整字runapi的差异，写出紧规则的runapi(如何存笔段 何时加密)
+            2.修改IDE分模式调用不同的runapi
+            3.不同结构字测试（IDE?lua?）
+            4.修改生成紧规则的程序，重新批量生成紧规则
+            5.紧规则的数据库迁移
+            
+
+
+
+
+
